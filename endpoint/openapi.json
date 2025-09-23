@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Lookup & Leaderboard API",
-    "description": "API for user lookups, leaderboard functionality, and image hosting",
+    "title": "Look up & Leaderboard API",
+    "description": "API for user look ups, leaderboard functionality, and image hosting",
     "license": {
       "name": "MIT"
     },
@@ -26,7 +26,7 @@
           {
             "name": "username",
             "in": "path",
-            "description": "The username to lookup",
+            "description": "The username to look up",
             "required": true,
             "schema": {
               "type": "string"
@@ -64,7 +64,7 @@
           {
             "name": "uid",
             "in": "path",
-            "description": "The user ID to lookup",
+            "description": "The user ID to look up",
             "required": true,
             "schema": {
               "type": "integer",
@@ -380,7 +380,7 @@
           "createdAt": {
             "type": "integer",
             "format": "int64",
-            "description": "Unix timestamp of account creation"
+            "description": "UNIX timestamp of account creation"
           },
           "discordId": {
             "type": "string",
@@ -451,7 +451,7 @@
           },
           "backgroundEffect": {
             "type": "string",
-            "description": "Background effects as JSON string"
+            "description": "Background effects as a JSON string"
           },
           "description": {
             "type": "string",
@@ -534,7 +534,7 @@
           },
           "usernameEffect": {
             "type": "string",
-            "description": "Username effects as JSON string"
+            "description": "Username effects as a JSON string"
           },
           "accentColor": {
             "type": "string",
