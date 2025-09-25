@@ -36,6 +36,7 @@
           {
             "group": "Guides",
             "pages": [
+              "guides/custom-assets",
               "guides/applications",
               "guides/discord",
               "guides/premium",
