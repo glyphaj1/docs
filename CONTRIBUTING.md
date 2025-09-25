@@ -15,3 +15,8 @@
 - Subjective alterations to wording.
 - Changes to the overall structure and format of the documentation.
 - Additions that duplicate or unnecessarily reformat existing documentation.
+
+### Contributor Badge
+
+The [Contributor Badge](https://help.haunt.gg/customization/badges#contributor-badge) on [haunt.gg](https://haunt.gg) is awarded to users who contribute to this documentation.  
+The badge is not given for every edit. It is reserved for more significant contributions, such as adding new guides.
