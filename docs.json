@@ -50,6 +50,14 @@
             ]
           },
           {
+            "group": "Events",
+            "pages": [
+              "events/information",
+              "events/rules", 
+              "events/participation"
+            ]
+          },
+          {
             "group": "Troubleshooting",
             "pages": [
               "troubleshooting/assets",
