@@ -16,6 +16,9 @@
   "security": [
     {
       "apiKeyAuth": []
+    },
+    {
+      "bearerAuth": []
     }
   ],
   "paths": {
@@ -196,19 +199,6 @@
     "/leaderboard/views": {
       "get": {
         "description": "Get the views leaderboard",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10,
-              "maximum": 100
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Views leaderboard",
@@ -239,19 +229,6 @@
     "/leaderboard/badges": {
       "get": {
         "description": "Get the badges leaderboard",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10,
-              "maximum": 100
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Badges leaderboard",
@@ -282,19 +259,6 @@
     "/leaderboard/uid": {
       "get": {
         "description": "Get the UID leaderboard",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10,
-              "maximum": 100
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "UID leaderboard",
@@ -408,7 +372,7 @@
         "type": "object",
         "required": [
           "id",
-          "uuid",
+          "uid",
           "username"
         ],
         "properties": {
@@ -416,9 +380,9 @@
             "type": "string",
             "description": "Unique user identifier"
           },
-          "uuid": {
+          "uid": {
             "type": "integer",
-            "description": "User UUID"
+            "description": "User UID"
           },
           "username": {
             "type": "string",
@@ -1095,25 +1059,38 @@
       "LeaderboardEntry": {
         "type": "object",
         "required": [
-          "rank",
-          "user",
-          "score"
+          "id",
+          "uid",
+          "username",
+          "createdAt",
+          "views",
+          "badges"
         ],
         "properties": {
-          "rank": {
-            "type": "integer",
-            "description": "Position in leaderboard"
+          "id": {
+            "type": "string",
+            "description": "Unique user identifier"
           },
-          "user": {
-            "$ref": "#/components/schemas/User"
-          },
-          "score": {
+          "uid": {
             "type": "integer",
-            "description": "Score for this leaderboard type"
+            "description": "User UID"
           },
-          "change": {
+          "username": {
+            "type": "string",
+            "description": "Username"
+          },
+          "createdAt": {
             "type": "integer",
-            "description": "Change in rank since last update"
+            "format": "int64",
+            "description": "UNIX timestamp of account creation"
+          },
+          "views": {
+            "type": "integer",
+            "description": "Total profile views"
+          },
+          "badges": {
+            "type": "integer",
+            "description": "Total badges count"
           }
         }
       },
@@ -1157,6 +1134,10 @@
         "type": "apiKey",
         "in": "query",
         "name": "key"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }
