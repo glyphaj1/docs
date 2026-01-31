@@ -95,7 +95,13 @@
           {
             "group": "ImageHost Endpoints",
             "pages": [
-              "endpoint/imagehost/upload"
+              "endpoint/imagehost/upload",
+              "endpoint/imagehost/gallery",
+              "endpoint/imagehost/list-folders",
+              "endpoint/imagehost/create-folder",
+              "endpoint/imagehost/get-folder",
+              "endpoint/imagehost/update-folder",
+              "endpoint/imagehost/delete-folder"
             ]
           }
         ]

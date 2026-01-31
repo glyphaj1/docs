@@ -11,7 +11,7 @@ icon: book-open-reader
 
 ## Welcome
 
-The Haunt.gg API provides access to user profiles and leaderboard data. All endpoints use API key authentication and return JSON responses.
+The Haunt.gg API provides access to user profiles, leaderboard data, and image hosting. All endpoints return JSON responses.
 
 **Base URL:** `https://haunt.gg/api`
 
@@ -25,7 +25,7 @@ Retrieve detailed user information, including profile data, badges, links, and a
 - `GET /lookup/username/{username}` - Look up user by username
 - `GET /lookup/uid/{uid}` - Look up user by user ID
 
-### **Leaderboard Endpoints**  
+### **Leaderboard Endpoints**
 Access leaderboard rankings with user statistics.
 
 - `GET /leaderboard/views` - Get users ranked by profile views
@@ -33,18 +33,35 @@ Access leaderboard rankings with user statistics.
 - `GET /leaderboard/uid` - Get users ranked by UID
 
 ### **ImageHost Endpoints**
-Upload and host images through the Haunt.gg image hosting service.
+Upload and manage images through the Haunt.gg image hosting service.
 
 - `POST /imagehost/upload` - Upload an image file
+- `GET /imagehost/gallery` - List all uploaded images
+- `GET /imagehost/folders` - List all folders
+- `POST /imagehost/folders` - Create a new folder
+- `GET /imagehost/folders/{id}` - Get folder details with files
+- `PATCH /imagehost/folders/{id}` - Update a folder
+- `DELETE /imagehost/folders/{id}` - Delete a folder
+
 ---
 
 ## Authentication
 
-All API endpoints require an API key passed as a query parameter:
+There are two types of API keys:
+
+### Account API Key
+Used for all endpoints except image upload. Can be passed as a query parameter or Bearer token:
 
 ```bash
-curl "https://haunt.gg/api/lookup/username/curet?key=YOUR_API_KEY"
+curl "https://haunt.gg/api/lookup/username/curet?key=YOUR_ACCOUNT_API_KEY"
 ```
+
+```bash
+curl -H "Authorization: Bearer YOUR_ACCOUNT_API_KEY" "https://haunt.gg/api/lookup/username/curet"
+```
+
+### ImageHost API Key
+Used only for the `/imagehost/upload` endpoint. Passed as a form field in the multipart upload request.
 
 <CardGroup cols={1}>
   <Card
