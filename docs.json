@@ -73,7 +73,8 @@
           {
             "group": "Overview",
             "pages": [
-              "endpoint/introduction"
+              "endpoint/introduction",
+              "endpoint/api-key"
             ]
           },
           {
