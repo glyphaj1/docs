@@ -15,10 +15,10 @@
   ],
   "security": [
     {
-      "apiKeyAuth": []
+      "accountApiKey": []
     },
     {
-      "bearerAuth": []
+      "accountBearerAuth": []
     }
   ],
   "paths": {
@@ -103,7 +103,11 @@
       "post": {
         "summary": "ImageHost Upload",
         "description": "Upload an image file to the image hosting service. Requires your ImageHost API key which can be found in your dashboard.",
-        "security": [],
+        "security": [
+          {
+            "imagehostApiKey": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -285,6 +289,410 @@
           }
         }
       }
+    },
+    "/imagehost/gallery": {
+      "get": {
+        "summary": "ImageHost Gallery",
+        "description": "Retrieve a paginated list of all uploaded images. Requires your Account API key.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of files to return (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of files to skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gallery files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GalleryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imagehost/folders": {
+      "get": {
+        "summary": "List Folders",
+        "description": "Retrieve a list of all folders with file counts and total sizes. Requires your Account API key.",
+        "responses": {
+          "200": {
+            "description": "Folders retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoldersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Folder",
+        "description": "Create a new folder. Requires your Account API key.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["folderName"],
+                "properties": {
+                  "folderName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "description": "Folder name (must be unique per user)"
+                  },
+                  "folderPublic": {
+                    "type": "boolean",
+                    "description": "Whether the folder is publicly accessible (defaults to false)"
+                  },
+                  "folderPasswordEnabled": {
+                    "type": "boolean",
+                    "description": "Whether the folder requires a password (only for public folders)"
+                  },
+                  "folderPassword": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "description": "Folder password (required if folderPasswordEnabled is true)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Folder created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "folder": {
+                      "$ref": "#/components/schemas/FolderWithStats"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - folder limit reached",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - folder name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imagehost/folders/{id}": {
+      "get": {
+        "summary": "Get Folder",
+        "description": "Retrieve a specific folder with its files. Requires your Account API key.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The folder ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of files to return (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of files to skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderDetailResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Folder",
+        "description": "Update folder properties such as name, visibility, or password. Requires your Account API key.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The folder ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "folderName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 32,
+                    "description": "New folder name (must be unique per user)"
+                  },
+                  "folderPublic": {
+                    "type": "boolean",
+                    "description": "Whether the folder is publicly accessible"
+                  },
+                  "folderPasswordEnabled": {
+                    "type": "boolean",
+                    "description": "Whether the folder requires a password"
+                  },
+                  "folderPassword": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "description": "Folder password (hashed before storage)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Folder updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Folder updated successfully."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - folder name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Folder",
+        "description": "Delete a folder. Files in the folder are not deleted. Requires your Account API key.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The folder ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [true]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageHostErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -349,6 +757,186 @@
                 "description": "Uploaded image file height in pixels"
               }
             }
+          }
+        }
+      },
+      "GalleryFile": {
+        "type": "object",
+        "required": ["id", "fileName", "fileExtension", "fileSize", "fileOriginal", "uploadAt", "favorite"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "File identifier"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name without extension"
+          },
+          "fileExtension": {
+            "type": "string",
+            "description": "File extension"
+          },
+          "fileSize": {
+            "type": "integer",
+            "description": "File size in bytes"
+          },
+          "fileOriginal": {
+            "type": "string",
+            "description": "Original file name"
+          },
+          "uploadAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp of upload"
+          },
+          "favorite": {
+            "type": "boolean",
+            "description": "Whether the file is favorited"
+          },
+          "folder": {
+            "nullable": true,
+            "$ref": "#/components/schemas/Folder"
+          }
+        }
+      },
+      "Folder": {
+        "type": "object",
+        "required": ["id", "folderName", "folderPublic", "folderPasswordEnabled", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Folder identifier"
+          },
+          "folderName": {
+            "type": "string",
+            "description": "Folder name"
+          },
+          "folderPublic": {
+            "type": "boolean",
+            "description": "Whether the folder is publicly accessible"
+          },
+          "folderPasswordEnabled": {
+            "type": "boolean",
+            "description": "Whether the folder requires a password"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp of folder creation"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp of last update"
+          }
+        }
+      },
+      "FolderWithStats": {
+        "allOf": [
+          { "$ref": "#/components/schemas/Folder" },
+          {
+            "type": "object",
+            "properties": {
+              "fileCount": {
+                "type": "integer",
+                "description": "Number of files in the folder"
+              },
+              "totalSize": {
+                "type": "integer",
+                "description": "Total size of all files in bytes"
+              }
+            }
+          }
+        ]
+      },
+      "GalleryResponse": {
+        "type": "object",
+        "required": ["files", "total"],
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GalleryFile"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of files"
+          },
+          "limit": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Applied limit"
+          },
+          "offset": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Applied offset"
+          }
+        }
+      },
+      "FoldersResponse": {
+        "type": "object",
+        "required": ["folders", "total"],
+        "properties": {
+          "folders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderWithStats"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of folders"
+          }
+        }
+      },
+      "FolderDetailFile": {
+        "allOf": [
+          { "$ref": "#/components/schemas/GalleryFile" },
+          {
+            "type": "object",
+            "properties": {
+              "fileWidth": {
+                "type": "integer",
+                "nullable": true,
+                "description": "File width in pixels"
+              },
+              "fileHeight": {
+                "type": "integer",
+                "nullable": true,
+                "description": "File height in pixels"
+              }
+            }
+          }
+        ]
+      },
+      "FolderDetailResponse": {
+        "type": "object",
+        "required": ["folder", "files", "total"],
+        "properties": {
+          "folder": {
+            "$ref": "#/components/schemas/Folder"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderDetailFile"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of files in the folder"
+          },
+          "limit": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Applied limit"
+          },
+          "offset": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Applied offset"
           }
         }
       },
@@ -1130,14 +1718,22 @@
       }
     },
     "securitySchemes": {
-      "apiKeyAuth": {
+      "accountApiKey": {
         "type": "apiKey",
         "in": "query",
-        "name": "key"
+        "name": "key",
+        "description": "Your Account API key (found in your dashboard)"
       },
-      "bearerAuth": {
+      "accountBearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "Your Account API key passed as a Bearer token in the Authorization header"
+      },
+      "imagehostApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "key",
+        "description": "Your ImageHost API key (found in your dashboard). Only used for the upload endpoint."
       }
     }
   }
