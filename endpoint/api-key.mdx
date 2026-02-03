@@ -16,8 +16,10 @@ Your Account API key is used for all endpoints except image uploads. It can be p
 - **Bearer token:** `Authorization: Bearer YOUR_ACCOUNT_API_KEY`
 
 Each key comes with the following permissions:
-    - Update your profile information
-    - Access to your **imagehost gallery** and **folders** (you can set if None, View Only, or Full Access)
+- `imagehost.gallery`
+- `imagehost.folders`
+- `lookup` <Badge icon="lock" color="yellow"><Tooltip headline="Restricted Permissions" tip="These permissions have to be requested via application." cta="Learn more" href="/endpoint/api-key#restricted-permissions">Restricted</Tooltip></Badge>
+- `leaderboard` <Badge icon="lock" color="yellow"><Tooltip headline="Restricted Permissions" tip="These permissions have to be requested via application." cta="Learn more" href="/endpoint/api-key#restricted-permissions">Restricted</Tooltip></Badge>
 
 ### ImageHost API Key
 Your ImageHost API key is used exclusively for the `/imagehost/upload` endpoint. It is passed as a `key` field in the multipart form data of the upload request.
@@ -46,8 +48,8 @@ Your ImageHost API key is used exclusively for the `/imagehost/upload` endpoint.
 
 ## Restricted Permissions
 Restricted permissions are:
-    - Access to **leaderboard data**
-    - Access to user **profile lookups**
+- `lookup`
+- `leaderboard`
 
 These permissions have to be requested via application.
 
