@@ -7,6 +7,10 @@
     "light": "#F38ABA",
     "dark": "#D970A1"
   },
+  "banner": {
+  "content": "We are aware of the problem relating instagram social cards not working. [Read more](../troubleshooting/instagram)",
+  "dismissible": true
+  },
   "favicon": "/logo/favicon.png",
   "navigation": {
     "tabs": [
@@ -62,6 +66,7 @@
             "pages": [
               "troubleshooting/assets",
               "troubleshooting/discord",
+              "troubleshooting/instagram",
               "troubleshooting/login"
             ]
           }
